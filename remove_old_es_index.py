@@ -32,10 +32,13 @@ def get_state_file(index_folder):
         return get_index_name(file_name)
 
 def get_date_time(index_name):
-    m = re.search('(\d+\.\d+\.\d+)', index_name)
-    if m:
-        found = m.group(1)
-        return found
+    try:
+        m = re.search('(\d+\.\d+\.\d+)', index_name)
+        if m:
+            found = m.group(1)
+            return found
+    except Exception as e:
+        print(e)
     return ""
 
 
@@ -70,7 +73,7 @@ def run(path_folder, number_file_remove):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Remove directly shard from raw shard file. Tool will remove <rm_files> oldest indexs in  <es_path> folder, with index pattern name is: *%Y.%M.%d*, ex: logstash-2018.09.26-http. NOTE: Before run tool, please stop elasticsearch service. \nTool run as python 2.7')
     parser.add_argument("-es_path", '--es_path', help="Path of indices ES. Example: '/esdata/elasticsearch/nodes/0/indices'")
-    parser.add_argument("-rm_files", '--rm_files', type=int, help="Number of file need remove. Example: 10")
+    parser.add_argument("-rm_files", '--rm_files', type=int, default=0, help="Number of file need remove. Example: 10")
     args = parser.parse_args()
 
     run(args.es_path, args.rm_files)
